@@ -6,10 +6,11 @@
 <title>My Links</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text,#fff);background:#111;overflow-x:hidden}
+html{overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+body{margin:0;min-height:100vh;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text,#fff);background:#111;overflow-x:hidden}
 #bg{position:fixed;inset:0;z-index:-2;background-size:cover;background-position:center}
 #dim{position:fixed;inset:0;z-index:-1;background:#000}
-main{max-width:520px;margin:0 auto;padding:calc(min(100vh,177.7vw)*.27) 20px 120px;text-align:center}
+main{max-width:520px;margin:0 auto;padding:calc(min(100vh,177.7vw)*.27) 20px calc(min(100vh,177.7vw)*.2);min-height:100vh;text-align:center}
 #avatar{width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.7);box-shadow:0 8px 30px rgba(0,0,0,.35);background:#333}
 h1{margin:16px 0 6px;font-size:1.5rem}
 #bio{margin:0 0 28px;opacity:.85;white-space:pre-line}
