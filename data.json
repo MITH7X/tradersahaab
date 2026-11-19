@@ -1,0 +1,32 @@
+{
+ "name": "TraderSahaab",
+ "bio": "Markets. Mindset. Strategy.",
+ "avatar": "logo.jpg",
+ "bgType": "image",
+ "bgImage": "bg.jpg",
+ "bg1": "#000000",
+ "bg2": "#000000",
+ "dim": 0,
+ "btnStyle": "glass",
+ "btn": "#22c55e",
+ "btnText": "#ffffff",
+ "text": "#ffffff",
+ "radius": 30,
+ "links": [
+  {
+   "icon": "📸",
+   "title": "Instagram",
+   "url": "https://www.instagram.com/tradersahaab"
+  },
+  {
+   "icon": "▶️",
+   "title": "YouTube",
+   "url": "https://www.youtube.com/@tradersahaab7"
+  },
+  {
+   "icon": "✈️",
+   "title": "Telegram",
+   "url": "https://t.me/tradersahaab"
+  }
+ ]
+}

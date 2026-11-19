@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Links</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text,#fff);background:#111;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:-2;background-size:cover;background-position:center}
+#dim{position:fixed;inset:0;z-index:-1;background:#000}
+main{max-width:520px;margin:0 auto;padding:calc(min(100vh,177.7vw)*.27) 20px 120px;text-align:center}
+#avatar{width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.7);box-shadow:0 8px 30px rgba(0,0,0,.35);background:#333}
+h1{margin:16px 0 6px;font-size:1.5rem}
+#bio{margin:0 0 28px;opacity:.85;white-space:pre-line}
+.link{display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;width:78%;margin:0 auto 12px;padding:11px 22px;text-decoration:none;font-weight:600;font-size:.95rem;letter-spacing:.02em;color:var(--text);border-radius:var(--radius);background:rgba(255,255,255,.07);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);opacity:0;animation:rise .6s cubic-bezier(.2,.8,.2,1) forwards;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s,background .25s,width .25s}
+.link::before{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .6s}
+.link::after{content:"→";position:absolute;right:18px;opacity:0;transform:translateX(-10px);transition:.25s}
+.link:hover{transform:translateY(-3px) scale(1.04);width:84%;border-color:var(--btn);background:rgba(255,255,255,.14);box-shadow:0 0 0 1px var(--btn),0 8px 28px -4px var(--btn),0 0 40px -8px var(--btn)}
+.link:hover::before{left:130%}
+.link:hover::after{opacity:1;transform:none}
+.link:active{transform:scale(.97)}
+.filled .link{background:var(--btn);color:var(--btntext);border-color:transparent}
+.outline .link{background:transparent;border:2px solid var(--btn)}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes float{50%{transform:translateY(-6px)}}
+#avatar{animation:float 4s ease-in-out infinite;transition:box-shadow .3s}
+#avatar:hover{box-shadow:0 0 0 4px var(--btn),0 0 40px var(--btn)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,40%),rgba(34,197,94,.16),transparent 35%);transition:background .1s}
+#editBtn{position:fixed;right:16px;bottom:16px;display:none;z-index:5;padding:12px 16px;border:0;border-radius:30px;background:#fff;color:#000;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.editing #editBtn{display:block}
+#panel{position:fixed;top:0;right:0;bottom:0;width:360px;max-width:100%;background:#1b1b1f;color:#eee;z-index:10;padding:18px;overflow-y:auto;transform:translateX(100%);transition:transform .25s;box-shadow:-8px 0 30px rgba(0,0,0,.5)}
+#panel.open{transform:none}
+#panel h2{margin:0 0 12px;font-size:1.1rem;display:flex;justify-content:space-between}
+#panel h3{margin:20px 0 8px;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;opacity:.6}
+#panel label{display:block;font-size:.8rem;margin:8px 0 3px;opacity:.8}
+#panel input[type=text],#panel input[type=url],#panel textarea,#panel select{width:100%;padding:8px;border-radius:8px;border:1px solid #444;background:#26262c;color:#fff;font:inherit}
+#panel input[type=color]{width:100%;height:36px;border:0;background:none;padding:0}
+#panel input[type=range]{width:100%}
+#panel button{padding:8px 12px;border:0;border-radius:8px;background:#3b3b45;color:#fff;cursor:pointer;font:inherit}
+#panel button.pri{background:#6c5ce7}
+#panel button.x{background:#7a2b2b;padding:6px 10px}
+.row{display:flex;gap:6px;align-items:center}
+.row>*{flex:1}
+.item{background:#26262c;border-radius:10px;padding:10px;margin-bottom:8px}
+.item .row{margin-bottom:6px}
+.item .emoji{flex:0 0 56px}
+.item button{flex:0 0 auto}
+.hint{font-size:.75rem;opacity:.6;margin-top:6px}
+</style>
+</head>
+<body>
+<div id="bg"></div><div id="dim"></div>
+<main>
+  <img id="avatar" alt="">
+  <h1 id="name"></h1>
+  <p id="bio"></p>
+  <div id="links"></div>
+</main>
+
+<button id="editBtn">✎ Edit</button>
+<aside id="panel">
+  <h2>Edit page <button id="closeBtn">✕</button></h2>
+
+  <h3>Profile</h3>
+  <label>Profile picture</label><input type="file" id="avatarFile" accept="image/*">
+  <label>Name</label><input type="text" id="fName">
+  <label>Bio</label><textarea id="fBio" rows="3"></textarea>
+
+  <h3>Background</h3>
+  <label>Type</label>
+  <select id="fBgType"><option value="color">Solid color</option><option value="gradient">Gradient</option><option value="image">Image</option></select>
+  <div class="row"><div><label>Color 1</label><input type="color" id="fBg1"></div><div><label>Color 2</label><input type="color" id="fBg2"></div></div>
+  <label>Background image</label><input type="file" id="bgFile" accept="image/*">
+  <label>Image darkness</label><input type="range" id="fDim" min="0" max="80">
+
+  <h3>Style</h3>
+  <label>Button style</label>
+  <select id="fBtnStyle"><option value="filled">Filled</option><option value="outline">Outline</option><option value="glass">Glass</option></select>
+  <div class="row"><div><label>Button color</label><input type="color" id="fBtn"></div><div><label>Button text</label><input type="color" id="fBtnText"></div><div><label>Page text</label><input type="color" id="fText"></div></div>
+  <label>Roundness</label><input type="range" id="fRadius" min="0" max="40">
+
+  <h3>Links</h3>
+  <div id="linkEditor"></div>
+  <button id="addLink" class="pri">+ Add link</button>
+
+  <h3>Save / publish</h3>
+  <div class="row"><button id="exportBtn" class="pri">Download data.json</button><button id="importBtn">Import</button></div>
+  <input type="file" id="importFile" accept=".json" hidden>
+  <p class="hint">Changes auto-save in this browser. To publish, download data.json and put it next to index.html wherever you host it (Netlify, GitHub Pages…).</p>
+  <button id="resetBtn" class="x">Reset everything</button>
+</aside>
+
+<script>
+const DEFAULT={name:"Your Name",bio:"Creator • Trader • Builder",avatar:"",bgType:"gradient",bg1:"#6c5ce7",bg2:"#0f0c29",bgImage:"",dim:30,
+btnStyle:"filled",btn:"#ffffff",btnText:"#111111",text:"#ffffff",radius:14,
+links:[{icon:"📸",title:"Instagram",url:"https://instagram.com"},{icon:"▶️",title:"YouTube",url:"https://youtube.com"},{icon:"🐦",title:"X / Twitter",url:"https://x.com"}]};
+const KEY="linktree-data";
+const $=id=>document.getElementById(id);
+const editing=location.hash==="#edit";
+let S=null;
+
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function render(){
+  document.title=S.name;
+  $("name").textContent=S.name;$("bio").textContent=S.bio;
+  const av=$("avatar");av.src=S.avatar||"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10" fill="#555"/><circle cx="5" cy="4" r="2" fill="#aaa"/><ellipse cx="5" cy="9" rx="3.5" ry="3" fill="#aaa"/></svg>');
+  const bg=$("bg");
+  bg.style.background=S.bgType==="color"?S.bg1:S.bgType==="gradient"?`linear-gradient(160deg,${S.bg1},${S.bg2})`:(S.bgImage?`#000 url(${S.bgImage}) center top/contain no-repeat`:S.bg1);
+  $("dim").style.opacity=S.bgType==="image"?S.dim/100:0;
+  const r=document.documentElement.style;
+  r.setProperty("--btn",S.btn);r.setProperty("--btntext",S.btnText);r.setProperty("--text",S.text);r.setProperty("--radius",S.radius+"px");
+  document.body.style.color=S.text;
+  $("links").className=S.btnStyle;
+  $("links").innerHTML="";
+  S.links.forEach(l=>{if(!l.url&&!l.title)return;
+    const a=document.createElement("a");a.className="link";a.href=l.url||"#";a.target="_blank";a.rel="noopener";
+    a.textContent=(l.icon?l.icon+"  ":"")+l.title;a.style.animationDelay=(.15*$("links").children.length+.2)+"s";$("links").appendChild(a)});
+}
+function renderEditor(){
+  const box=$("linkEditor");box.innerHTML="";
+  S.links.forEach((l,i)=>{
+    const d=document.createElement("div");d.className="item";
+    d.innerHTML=`<div class="row"><input type="text" class="emoji" placeholder="😀" value=""><input type="text" class="t" placeholder="Title"></div>
+    <input type="url" class="u" placeholder="https://...">
+    <div class="row" style="margin-top:6px"><button class="up">↑</button><button class="dn">↓</button><button class="x del">Delete</button></div>`;
+    d.querySelector(".emoji").value=l.icon||"";d.querySelector(".t").value=l.title;d.querySelector(".u").value=l.url;
+    d.querySelector(".emoji").oninput=e=>{l.icon=e.target.value;save();render()};
+    d.querySelector(".t").oninput=e=>{l.title=e.target.value;save();render()};
+    d.querySelector(".u").oninput=e=>{l.url=e.target.value;save();render()};
+    d.querySelector(".up").onclick=()=>move(i,-1);d.querySelector(".dn").onclick=()=>move(i,1);
+    d.querySelector(".del").onclick=()=>{S.links.splice(i,1);save();render();renderEditor()};
+    box.appendChild(d);
+  });
+}
+function move(i,d){const j=i+d;if(j<0||j>=S.links.length)return;[S.links[i],S.links[j]]=[S.links[j],S.links[i]];save();render();renderEditor()}
+function fillForm(){
+  $("fName").value=S.name;$("fBio").value=S.bio;$("fBgType").value=S.bgType;$("fBg1").value=S.bg1;$("fBg2").value=S.bg2;
+  $("fDim").value=S.dim;$("fBtnStyle").value=S.btnStyle;$("fBtn").value=S.btn;$("fBtnText").value=S.btnText;$("fText").value=S.text;$("fRadius").value=S.radius;
+}
+function bind(id,key,num){$(id).oninput=e=>{S[key]=num?+e.target.value:e.target.value;save();render()}}
+function shrink(file,max,q,cb){
+  const img=new Image(),fr=new FileReader();
+  fr.onload=()=>{img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement("canvas");c.width=img.width*s;c.height=img.height*s;
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",q))};img.src=fr.result};
+  fr.readAsDataURL(file);
+}
+function setupEditor(){
+  document.body.classList.add("editing");
+  fillForm();renderEditor();
+  [["fName","name"],["fBio","bio"],["fBgType","bgType"],["fBg1","bg1"],["fBg2","bg2"],["fBtnStyle","btnStyle"],["fBtn","btn"],["fBtnText","btnText"],["fText","text"]].forEach(a=>bind(a[0],a[1]));
+  bind("fDim","dim",1);bind("fRadius","radius",1);
+  $("avatarFile").onchange=e=>e.target.files[0]&&shrink(e.target.files[0],400,.9,d=>{S.avatar=d;save();render()});
+  $("bgFile").onchange=e=>e.target.files[0]&&shrink(e.target.files[0],1600,.8,d=>{S.bgImage=d;S.bgType="image";$("fBgType").value="image";save();render()});
+  $("addLink").onclick=()=>{S.links.push({icon:"🔗",title:"New link",url:""});save();render();renderEditor()};
+  $("editBtn").onclick=()=>$("panel").classList.add("open");
+  $("closeBtn").onclick=()=>$("panel").classList.remove("open");
+  $("exportBtn").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download="data.json";a.click()};
+  $("importBtn").onclick=()=>$("importFile").click();
+  $("importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{S={...DEFAULT,...JSON.parse(t)};save();render();fillForm();renderEditor()})};
+  $("resetBtn").onclick=()=>{if(confirm("Reset everything?")){S=structuredClone(DEFAULT);save();render();fillForm();renderEditor()}};
+  $("panel").classList.add("open");
+}
+addEventListener('pointermove',e=>{const r=document.documentElement.style;r.setProperty('--mx',e.clientX+'px');r.setProperty('--my',e.clientY+'px')});
+(async function(){
+  const local=localStorage.getItem(KEY);
+  let remote=null;
+  try{const r=await fetch("data.json",{cache:"no-store"});if(r.ok)remote=await r.json()}catch(e){}
+  const src=editing?(local&&JSON.parse(local))||remote:remote||(local&&JSON.parse(local));
+  S={...DEFAULT,...(src||{})};
+  render();
+  if(editing)setupEditor();
+})();
+</script>
+</body>
+</html>
